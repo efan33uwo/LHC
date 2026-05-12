@@ -39,7 +39,7 @@ export default function ServicesPage() {
                   className="border-b border-green-200 pb-8"
                 >
                   <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-green-100 text-sm font-semibold text-green-800">
+                    <div className="flex h-13 w-13 shrink-0 items-center justify-center rounded-full bg-green-100 text-sm font-semibold text-green-800">
                       {service.icon}
                     </div>
 
