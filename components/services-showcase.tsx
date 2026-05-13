@@ -2,17 +2,12 @@ import Link from "next/link";
 import { ArrowRight, CalendarCheck, ClipboardCheck, Sparkles } from "lucide-react";
 import ScrollReveal from "@/components/scroll-reveal";
 import type { ServiceItem } from "@/lib/clinic-content";
+import type { Language } from "@/lib/translations";
 import { getServiceVisual } from "@/components/service-visuals";
 
 type ServicesShowcaseProps = {
   services: ServiceItem[];
-};
-
-const categoryLabels: Record<ServiceItem["category"], string> = {
-  claims: "Claims",
-  injury: "Injury",
-  therapy: "Therapy",
-  coverage: "Coverage",
+  language: Language;
 };
 
 const categoryAccent: Record<ServiceItem["category"], string> = {
@@ -22,44 +17,135 @@ const categoryAccent: Record<ServiceItem["category"], string> = {
   coverage: "border-t-[#714a7d]",
 };
 
-export default function ServicesShowcase({ services }: ServicesShowcaseProps) {
+const showcaseCopy = {
+  en: {
+    eyebrow: "Services",
+    title: "Find the right clinic service fast.",
+    subtitle:
+      "Choose the reason for your visit: accident claims, injury care, rehab therapy, or extended coverage support.",
+    allServices: "View all services",
+    appointment: "Request appointment",
+    details: "Details",
+    categoryLabels: {
+      claims: "Claims",
+      injury: "Injury",
+      therapy: "Therapy",
+      coverage: "Coverage",
+    },
+    highlights: [
+      ["Accident care", "Claims help"],
+      ["Mobility", "Rehab plan"],
+      ["Performance", "Recovery"],
+      ["Fall recovery", "Pain care"],
+      ["Strength", "Mobility"],
+      ["Spine care", "Joints"],
+      ["Soft tissue", "Relax"],
+      ["Pain support", "Tension"],
+      ["Coverage", "Receipts"],
+    ],
+    features: [
+      {
+        icon: ClipboardCheck,
+        title: "Claims and coverage handled clearly",
+        body: "MVA claims and extended healthcare support without making patients guess the next step.",
+      },
+      {
+        icon: CalendarCheck,
+        title: "Booking stays direct",
+        body: "A clear request path lets reception follow up and guide patients into the right service.",
+      },
+      {
+        icon: ArrowRight,
+        title: "Recovery can evolve",
+        body: "Patients can move between chiropractic, physiotherapy, RMT, and acupuncture as needs change.",
+      },
+    ],
+  },
+  zh: {
+    eyebrow: "服务项目",
+    title: "快速找到合适的诊所服务",
+    subtitle: "请选择就诊原因：事故理赔、损伤护理、康复治疗或延伸保险支持。",
+    allServices: "查看全部服务",
+    appointment: "预约",
+    details: "详情",
+    categoryLabels: {
+      claims: "理赔",
+      injury: "损伤",
+      therapy: "治疗",
+      coverage: "保险",
+    },
+    highlights: [
+      ["事故护理", "理赔协助"],
+      ["活动能力", "康复计划"],
+      ["运动表现", "恢复"],
+      ["跌倒恢复", "疼痛护理"],
+      ["力量训练", "活动能力"],
+      ["脊椎护理", "关节"],
+      ["软组织", "放松"],
+      ["疼痛支持", "紧张缓解"],
+      ["保险福利", "收据"],
+    ],
+    features: [
+      {
+        icon: ClipboardCheck,
+        title: "理赔与保险支持更清晰",
+        body: "为车祸理赔和延伸医疗保险患者说明下一步，不让患者自己猜流程。",
+      },
+      {
+        icon: CalendarCheck,
+        title: "预约流程直接明了",
+        body: "清楚的预约入口方便前台跟进，并引导患者选择合适服务。",
+      },
+      {
+        icon: ArrowRight,
+        title: "康复方案可以调整",
+        body: "患者可按需要在脊椎矫正、物理治疗、按摩和针灸之间配合护理。",
+      },
+    ],
+  },
+};
+
+export default function ServicesShowcase({
+  services,
+  language,
+}: ServicesShowcaseProps) {
   if (services.length === 0) {
     return null;
   }
 
+  const copy = showcaseCopy[language];
   const serviceRows = services.map((service, index) => ({
     service,
     visual: getServiceVisual(index),
+    highlights: copy.highlights[index] ?? getServiceVisual(index).highlights,
   }));
 
   return (
     <section
       id="services"
-      className="relative isolate w-full scroll-mt-32 overflow-hidden bg-[#f7faf6] py-12 text-slate-900 sm:py-14"
+      className="relative isolate w-full scroll-mt-32 overflow-hidden bg-[#eef7ef] py-12 text-slate-900 sm:py-14"
     >
       <div className="absolute inset-x-0 top-0 h-px bg-[#d8ded7]" />
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,rgba(255,255,255,0.95),rgba(238,247,241,0.84)_48%,rgba(250,244,233,0.76))]" />
-      <div className="absolute inset-x-0 top-0 -z-10 h-24 bg-white/70" />
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,rgba(255,255,255,0.68),rgba(238,247,241,0.9)_48%,rgba(250,244,233,0.76))]" />
 
-      <div className="mx-auto w-full max-w-7xl px-6 lg:px-10">
+      <div className="mx-auto w-full max-w-[1500px] px-6 lg:px-12">
         <ScrollReveal>
           <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 rounded-[3px] border border-[#cfd9cf] bg-white/82 px-4 py-2 text-sm font-semibold uppercase tracking-[0.14em] text-[#3d6f48] shadow-sm">
                 <Sparkles className="h-4 w-4" aria-hidden="true" />
-                Services
+                {copy.eyebrow}
               </div>
 
               <h2
                 className="mt-4 max-w-4xl text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl lg:text-5xl lg:leading-[1]"
                 style={{ fontFamily: "var(--font-source-serif)" }}
               >
-                Find the right clinic service fast.
+                {copy.title}
               </h2>
 
               <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
-                Choose the reason for your visit: accident claims, injury care,
-                rehab therapy, or extended coverage support.
+                {copy.subtitle}
               </p>
             </div>
 
@@ -68,14 +154,14 @@ export default function ServicesShowcase({ services }: ServicesShowcaseProps) {
                 href="/services"
                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[3px] bg-[#173f32] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#225c49]"
               >
-                View all services
+                {copy.allServices}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
               <Link
                 href="/booking"
                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[3px] border border-[#d9b36f] bg-[#d9b36f] px-6 py-3 text-sm font-semibold text-slate-950 shadow-sm transition hover:bg-[#caa15a]"
               >
-                Request appointment
+                {copy.appointment}
                 <CalendarCheck className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
@@ -84,8 +170,8 @@ export default function ServicesShowcase({ services }: ServicesShowcaseProps) {
 
         <ScrollReveal className="mt-6">
           <div className="-mx-6 overflow-x-auto px-6 pb-2 lg:mx-0 lg:px-0">
-            <div className="grid min-w-[1180px] grid-cols-9 gap-3 xl:min-w-0">
-              {serviceRows.map(({ service, visual }, index) => {
+            <div className="grid min-w-[1320px] grid-cols-9 gap-4 2xl:min-w-0">
+              {serviceRows.map(({ service, visual, highlights }, index) => {
                 const Icon = visual.icon;
                 const serviceNumber = String(index + 1).padStart(2, "0");
 
@@ -93,7 +179,7 @@ export default function ServicesShowcase({ services }: ServicesShowcaseProps) {
                   <Link
                     key={service.title}
                     href="/services"
-                    className={`group flex min-h-[176px] flex-col overflow-hidden border border-[#d8ded7] border-t-4 ${categoryAccent[service.category]} bg-white p-3.5 shadow-[0_10px_22px_rgba(20,48,40,0.055)] transition hover:-translate-y-0.5 hover:border-[#a8b8aa] hover:shadow-[0_14px_30px_rgba(22,52,42,0.1)]`}
+                    className={`group flex min-h-[194px] flex-col overflow-hidden rounded-[4px] border border-[#d8ded7] border-t-4 ${categoryAccent[service.category]} bg-white p-4 shadow-[0_12px_26px_rgba(20,48,40,0.065)] transition hover:-translate-y-0.5 hover:border-[#9db09f] hover:shadow-[0_18px_34px_rgba(22,52,42,0.12)]`}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <span
@@ -107,18 +193,18 @@ export default function ServicesShowcase({ services }: ServicesShowcaseProps) {
                     </div>
 
                     <p className="mt-4 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                      {categoryLabels[service.category]}
+                      {copy.categoryLabels[service.category]}
                     </p>
                     <h3 className="mt-1 text-sm font-semibold leading-5 text-slate-950">
                       {service.title}
                     </h3>
 
                     <p className="mt-2 text-xs leading-5 text-slate-500">
-                      {visual.highlights.join(" / ")}
+                      {highlights.join(" / ")}
                     </p>
 
                     <span className="mt-auto inline-flex items-center gap-1.5 text-xs font-semibold text-[#173f32]">
-                      Details
+                      {copy.details}
                       <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                     </span>
                   </Link>
@@ -130,23 +216,7 @@ export default function ServicesShowcase({ services }: ServicesShowcaseProps) {
 
         <ScrollReveal className="mt-8">
           <div className="grid gap-3 border-t border-[#d8ded7] pt-6 md:grid-cols-3">
-            {[
-              {
-                icon: ClipboardCheck,
-                title: "Claims and coverage handled clearly",
-                body: "MVA claims and extended healthcare support without making patients guess the next step.",
-              },
-              {
-                icon: CalendarCheck,
-                title: "Booking stays direct",
-                body: "A clear request path lets reception follow up and guide patients into the right service.",
-              },
-              {
-                icon: ArrowRight,
-                title: "Recovery can evolve",
-                body: "Patients can move between chiropractic, physiotherapy, RMT, and acupuncture as needs change.",
-              },
-            ].map((item) => {
+            {copy.features.map((item) => {
               const Icon = item.icon;
 
               return (

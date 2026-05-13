@@ -9,6 +9,7 @@ type HeroProps = {
   secondaryCta: string;
   primaryHref: string;
   secondaryHref: string;
+  quickLinks: string[];
 };
 
 export default function Hero({
@@ -19,14 +20,15 @@ export default function Hero({
   secondaryCta,
   primaryHref,
   secondaryHref,
+  quickLinks,
 }: HeroProps) {
   return (
     <section className="relative isolate left-1/2 right-1/2 w-screen min-h-[520px] -translate-x-1/2 overflow-hidden sm:min-h-[620px] lg:min-h-[760px]">
       <HeroSlider />
 
-      <div className="relative z-10 flex min-h-[520px] w-full items-center px-6 py-14 sm:min-h-[620px] sm:px-10 sm:py-16 lg:min-h-[760px] lg:px-16">
+      <div className="relative z-10 flex min-h-[520px] w-full items-start px-6 pb-14 pt-20 sm:min-h-[620px] sm:px-10 sm:pb-16 sm:pt-24 lg:min-h-[760px] lg:px-16 lg:pt-28">
         <div className="max-w-3xl">
-          <span className="inline-flex rounded-[3px] border border-white/20 bg-white/12 px-4 py-1.5 text-sm font-medium text-white backdrop-blur">
+          <span className="inline-flex rounded-[3px] border border-white/20 bg-white/14 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white shadow-[0_10px_28px_rgba(0,0,0,0.14)] backdrop-blur-md">
             {badge}
           </span>
 
@@ -57,16 +59,18 @@ export default function Hero({
             </Link>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3 text-sm text-white/85">
-            <span className="rounded-[3px] border border-white/20 bg-white/10 px-4 py-2 backdrop-blur">
-              MVA Claims
-            </span>
-            <span className="rounded-[3px] border border-white/20 bg-white/10 px-4 py-2 backdrop-blur">
-              Chiropractic
-            </span>
-            <span className="rounded-[3px] border border-white/20 bg-white/10 px-4 py-2 backdrop-blur">
-              Physiotherapy and RMT
-            </span>
+          <div className="mt-8 grid max-w-2xl gap-2 sm:grid-cols-3">
+            {quickLinks.map((item, index) => (
+              <span
+                key={item}
+                className="group flex min-h-14 items-center gap-3 rounded-[3px] border border-white/18 bg-white/[0.09] px-3 py-2 text-xs font-semibold uppercase tracking-[0.08em] text-white shadow-[0_12px_30px_rgba(0,0,0,0.16)] backdrop-blur-md"
+              >
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[2px] border border-white/16 bg-white/12 font-mono text-[0.65rem] text-[#f0d398]">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span>{item}</span>
+              </span>
+            ))}
           </div>
         </div>
       </div>

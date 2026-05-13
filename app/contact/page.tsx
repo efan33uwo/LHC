@@ -276,6 +276,9 @@ export default function ContactPage() {
         email={clinicContent.email}
         address={clinicContent.address}
         hours={clinicContent.hours}
+        phoneLabel={t(language, "contactCallTitle")}
+        emailLabel={t(language, "contactEmailTitle")}
+        visitLabel={t(language, "contactVisitTitle")}
       />
     </div>
   );
