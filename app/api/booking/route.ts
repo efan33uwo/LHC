@@ -100,6 +100,7 @@ export async function POST(request: Request) {
   const language = trimField(body.language, 20);
   const company = trimField(body.company, 200);
 
+  // Honeypot spam protection
   if (company) {
     return NextResponse.json({ ok: true });
   }
@@ -135,7 +136,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const text = [
+  const clinicNotificationText = [
     `Clinic: ${clinicContent.name}`,
     `Language preference (if provided): ${language || "-"}`,
     "",
@@ -149,21 +150,57 @@ export async function POST(request: Request) {
     `Submitted at: ${new Date().toISOString()}`,
   ].join("\n");
 
-  const result = await sendViaResend({
+  // 1. Send booking request to the clinic/support inbox
+  const clinicResult = await sendViaResend({
     from,
     replyTo: email || undefined,
     subject: `Appointment request - ${name}`,
-    text,
+    text: clinicNotificationText,
     to,
   });
 
-  if (!result.ok) {
-    console.error("Resend error:", result.error);
+  if (!clinicResult.ok) {
+    console.error("Resend clinic notification error:", clinicResult.error);
     return NextResponse.json(
       { error: "Could not send notification. Please call the clinic." },
       { status: 502 }
     );
   }
 
-  return NextResponse.json({ ok: true, channel: "resend" });
+  let confirmationSent = false;
+
+  // 2. Send confirmation email to the customer if they provided an email
+  if (email) {
+    const confirmationText = [
+      `Hi ${name},`,
+      "",
+      `Thank you for contacting ${clinicContent.name}.`,
+      "",
+      "We received your appointment request and someone from our team will get back to you shortly.",
+      "",
+      "If this is urgent, please contact the clinic directly.",
+      "",
+      `Best,`,
+      `${clinicContent.name}`,
+    ].join("\n");
+
+    const confirmationResult = await sendViaResend({
+      from,
+      subject: "We received your appointment request",
+      text: confirmationText,
+      to: email,
+    });
+
+    if (!confirmationResult.ok) {
+      console.error("Resend customer confirmation error:", confirmationResult.error);
+    } else {
+      confirmationSent = true;
+    }
+  }
+
+  return NextResponse.json({
+    ok: true,
+    channel: "resend",
+    confirmationSent,
+  });
 }
