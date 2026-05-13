@@ -21,15 +21,12 @@ export default function Hero({
   secondaryHref,
 }: HeroProps) {
   return (
-    <section className="relative isolate left-1/2 right-1/2 w-screen min-h-[420px] -translate-x-1/2 overflow-hidden sm:min-h-[500px] lg:min-h-[580px]">
+    <section className="relative isolate left-1/2 right-1/2 w-screen min-h-[520px] -translate-x-1/2 overflow-hidden sm:min-h-[620px] lg:min-h-[760px]">
       <HeroSlider />
 
-      <div className="absolute inset-0 bg-gradient-to-r from-slate-950/70 via-slate-900/40 to-slate-900/10" />
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-transparent to-transparent" />
-
-      <div className="relative z-10 flex min-h-[420px] w-full items-center px-6 py-12 sm:min-h-[500px] sm:px-10 sm:py-16 lg:min-h-[580px] lg:px-16">
+      <div className="relative z-10 flex min-h-[520px] w-full items-center px-6 py-14 sm:min-h-[620px] sm:px-10 sm:py-16 lg:min-h-[760px] lg:px-16">
         <div className="max-w-3xl">
-          <span className="inline-flex rounded-full border border-white/20 bg-white/12 px-4 py-1.5 text-sm font-medium text-white backdrop-blur">
+          <span className="inline-flex rounded-[3px] border border-white/20 bg-white/12 px-4 py-1.5 text-sm font-medium text-white backdrop-blur">
             {badge}
           </span>
 
@@ -37,40 +34,38 @@ export default function Hero({
             className="mt-6 max-w-4xl text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl lg:leading-[1.02]"
             style={{ fontFamily: "var(--font-source-serif)" }}
           >
-            Modern care for everyday health, recovery, and family wellness
+            {title}
           </h1>
 
           <p className="mt-6 max-w-2xl text-base leading-8 text-white/90 sm:text-lg">
-            Langham Health Center provides a professional clinic experience with
-            family medicine, chiropractic care, and supportive wellness services
-            in one welcoming setting.
+            {subtitle}
           </p>
 
           <div className="mt-9 flex flex-wrap gap-4">
             <Link
               href={primaryHref}
-              className="inline-flex min-h-11 items-center justify-center rounded-full border border-green-200 bg-green-100 px-6 py-3 text-sm font-medium text-green-900 transition hover:bg-green-200"
+              className="inline-flex min-h-11 items-center justify-center rounded-[3px] border border-[#d9b36f] bg-[#d9b36f] px-6 py-3 text-sm font-semibold text-slate-950 shadow-[0_10px_26px_rgba(217,179,111,0.25)] transition hover:bg-[#caa15a]"
             >
               {primaryCta}
             </Link>
 
             <Link
               href={secondaryHref}
-              className="inline-flex min-h-11 items-center justify-center rounded-full border border-green-200 bg-green-100 px-6 py-3 text-sm font-medium text-green-900 transition hover:bg-green-200"
+              className="inline-flex min-h-11 items-center justify-center rounded-[3px] border border-white bg-white px-6 py-3 text-sm font-semibold text-[#10261f] shadow-[0_10px_26px_rgba(255,255,255,0.16)] transition hover:bg-[#e6f1ea]"
             >
               {secondaryCta}
             </Link>
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3 text-sm text-white/85">
-            <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur">
-              Family Medicine
+            <span className="rounded-[3px] border border-white/20 bg-white/10 px-4 py-2 backdrop-blur">
+              MVA Claims
             </span>
-            <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur">
-              Chiropractic Care
+            <span className="rounded-[3px] border border-white/20 bg-white/10 px-4 py-2 backdrop-blur">
+              Chiropractic
             </span>
-            <span className="rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur">
-              English and Chinese Support
+            <span className="rounded-[3px] border border-white/20 bg-white/10 px-4 py-2 backdrop-blur">
+              Physiotherapy and RMT
             </span>
           </div>
         </div>

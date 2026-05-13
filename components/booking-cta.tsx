@@ -17,13 +17,10 @@ export default function BookingCTA({
   const isHash = buttonHref.startsWith("#");
 
   const buttonClass =
-    "inline-flex min-h-11 shrink-0 items-center justify-center rounded-full border border-green-200 bg-green-100 px-6 py-3 text-sm font-medium text-green-900 transition hover:bg-green-200";
+    "inline-flex min-h-11 shrink-0 items-center justify-center rounded-[3px] border border-[#173f32] bg-[#173f32] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#225c49]";
 
   return (
-    <section className="relative overflow-hidden rounded-[2rem] border-2 border-green-300 bg-white px-6 py-10 shadow-sm sm:px-10 sm:py-12">
-      <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-green-100/70 blur-2xl" />
-      <div className="absolute -bottom-16 left-0 h-44 w-44 rounded-full bg-[#e5f2e9] blur-2xl" />
-
+    <section className="relative overflow-hidden rounded-[3px] border border-[#b7c7b8] bg-white px-6 py-10 shadow-sm sm:px-10 sm:py-12">
       <div className="relative z-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-2xl">
           <p className="text-sm font-medium uppercase tracking-[0.14em] text-green-700">
@@ -39,13 +36,13 @@ export default function BookingCTA({
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3 text-sm text-slate-600">
-            <span className="rounded-full border border-green-200 bg-white px-4 py-2">
+            <span className="rounded-[3px] border border-green-200 bg-white px-4 py-2">
               Quick request form
             </span>
-            <span className="rounded-full border border-green-200 bg-white px-4 py-2">
+            <span className="rounded-[3px] border border-green-200 bg-white px-4 py-2">
               Clinic follow-up
             </span>
-            <span className="rounded-full border border-green-200 bg-white px-4 py-2">
+            <span className="rounded-[3px] border border-green-200 bg-white px-4 py-2">
               English and Chinese support
             </span>
           </div>

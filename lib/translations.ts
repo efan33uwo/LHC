@@ -68,10 +68,10 @@ export const translations: TranslationMap = {
     navContact: "Contact",
     langEnglish: "EN",
     langChinese: "中文",
-    heroBadge: "Family medicine — Markham, Ontario",
-    heroTitle: "Primary medical care for adults and families",
+    heroBadge: "Injury rehab and chiropractic care — Markham, Ontario",
+    heroTitle: "Care for injuries, rehab, and recovery",
     heroSubtitle:
-      "Langham Health Centre offers general practice services. Use the form on the Booking page to request an appointment; our office will contact you to confirm.",
+      "Langham Health Centre supports patients with MVA insurance claims, spinal and sports injuries, slip and fall injuries, physiotherapy, chiropractic, RMT, acupuncture, and extended healthcare.",
     heroPrimaryCta: "Request an appointment",
     heroSecondaryCta: "Clinical services",
     practitionersEyebrow: "Our Team",
@@ -84,7 +84,7 @@ export const translations: TranslationMap = {
       "We follow established clinical guidelines and maintain clear communication with patients in English and Chinese where available.",
     servicesTitle: "Services",
     servicesSubtitle:
-      "Summary of common services. Not all services may be available at every visit; eligibility is assessed at appointment.",
+      "Injury care, rehabilitation, therapy, and insurance-related support in one clinic setting.",
     contactInfoEyebrow: "Get in Touch",
     contactInfoTitle: "Contact information",
     contactInfoSubtitle:
@@ -96,10 +96,10 @@ export const translations: TranslationMap = {
     aboutMissionTitle: "Our Mission",
     aboutMissionBody:
       "To provide evidence-informed primary care in a professional setting, with respect for patient confidentiality and cultural needs.",
-    servicesPageEyebrow: "Clinical Services",
-    servicesPageTitle: "Clinical services",
+    servicesPageEyebrow: "Services",
+    servicesPageTitle: "Injury care, rehabilitation, and coverage support",
     servicesPageSubtitle:
-      "The following list is for general information. Assessment, diagnosis, and treatment are provided only during a clinical encounter.",
+      "Find the right starting point for motor vehicle accident claims, spinal cord injury, sports injury, slip and fall injuries, physiotherapy, chiropractic, RMT, acupuncture, and extended healthcare.",
     bookingPageEyebrow: "Appointments",
     bookingPageTitle: "Book your visit",
     bookingPageSubtitle:
@@ -127,7 +127,7 @@ export const translations: TranslationMap = {
     bookingDescription:
       "Submit a request online through the Booking page, or contact reception by telephone during office hours.",
     bookingCta: "Booking",
-    footerTagline: "Primary care services. By appointment.",
+    footerTagline: "Injury rehab, chiropractic, and therapy services. By appointment.",
     footerCopyright: "All rights reserved.",
   },
   zh: {
@@ -138,10 +138,10 @@ export const translations: TranslationMap = {
     navContact: "联系我们",
     langEnglish: "EN",
     langChinese: "中文",
-    heroBadge: "全科医疗 — 安大略省万锦市",
-    heroTitle: "为成人与家庭提供基层医疗服务",
+    heroBadge: "损伤康复与脊椎矫正 — 安大略省万锦市",
+    heroTitle: "为损伤、康复与恢复提供护理",
     heroSubtitle:
-      "Langham Health Centre 提供全科门诊服务。请在预约页面提交申请，诊所以电话或邮件与您确认时间。",
+      "Langham Health Centre 提供车祸保险理赔、脊髓与运动损伤、滑倒跌倒损伤、物理治疗、脊椎矫正、注册按摩治疗、针灸及延伸医疗保险相关支持。",
     heroPrimaryCta: "提交预约申请",
     heroSecondaryCta: "医疗服务",
     practitionersEyebrow: "医疗团队",
@@ -152,7 +152,7 @@ export const translations: TranslationMap = {
     whyChooseTitle: "诊疗与沟通",
     whyChooseSubtitle: "临床工作遵循规范路径；在条件允许情况下提供中英文沟通支持。",
     servicesTitle: "服务项目",
-    servicesSubtitle: "以下为常见服务概述；具体是否适用须在就诊时由医生评估。",
+    servicesSubtitle: "在同一诊所环境中提供损伤护理、康复治疗、理疗及保险相关支持。",
     contactInfoEyebrow: "联系信息",
     contactInfoTitle: "与我们联系",
     contactInfoSubtitle: "欢迎通过电话、邮件或到诊所前台与我们联系。",
@@ -162,9 +162,10 @@ export const translations: TranslationMap = {
     aboutMissionTitle: "我们的使命",
     aboutMissionBody:
       "在专业机构环境中提供循证基层医疗，尊重患者隐私与文化需求。",
-    servicesPageEyebrow: "医疗服务",
-    servicesPageTitle: "医疗服务",
-    servicesPageSubtitle: "以下信息仅供一般说明；诊断与治疗须在实际就诊中完成。",
+    servicesPageEyebrow: "服务项目",
+    servicesPageTitle: "损伤护理、康复治疗与保险支持",
+    servicesPageSubtitle:
+      "了解车祸保险理赔、脊髓损伤、运动损伤、滑倒跌倒损伤、物理治疗、脊椎矫正、注册按摩治疗、针灸及延伸医疗保险相关服务。",
     bookingPageEyebrow: "预约就诊",
     bookingPageTitle: "提交预约申请",
     bookingPageSubtitle:
@@ -190,7 +191,7 @@ export const translations: TranslationMap = {
     bookingTitle: "预约申请",
     bookingDescription: "请使用预约页面提交申请，或在营业时间内致电前台。",
     bookingCta: "预约",
-    footerTagline: "基层医疗服务。须预约就诊。",
+    footerTagline: "损伤康复、脊椎矫正及治疗服务。须预约就诊。",
     footerCopyright: "版权所有。",
   },
 };

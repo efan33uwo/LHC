@@ -18,7 +18,7 @@ export default function Footer({
   hours,
 }: FooterProps) {
   return (
-    <footer id="contact" className="mt-12 border-t border-green-100 bg-white">
+    <footer id="contact" className="border-t border-green-100 bg-white">
       <div className="mx-auto grid w-full max-w-5xl gap-8 px-5 py-12 sm:px-8 md:grid-cols-2 lg:grid-cols-4">
         <div>
           <h3 className="text-base font-semibold text-slate-900">{clinicName}</h3>

@@ -34,8 +34,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
+a:not([class]) {
   color: inherit;
+}
+
+a {
   text-decoration: none;
 }
 

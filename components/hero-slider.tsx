@@ -35,10 +35,13 @@ export default function HeroSlider() {
             }`}
             style={{ backgroundImage: `url('${src}')` }}
           />
-          <div className="absolute inset-0 bg-slate-950/20" />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/10 via-transparent to-slate-950/35" />
+          <div className="absolute inset-0 bg-[#07120e]/22" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#07120e]/12 via-transparent to-[#07120e]/48" />
         </div>
       ))}
+
+      <div className="absolute inset-0 bg-gradient-to-r from-[#07120e]/82 via-[#07120e]/50 to-[#07120e]/8" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#07120e]/66 via-transparent to-transparent" />
 
       <div className="absolute bottom-7 left-1/2 z-10 flex -translate-x-1/2 gap-2">
         {images.map((_, index) => (
@@ -46,8 +49,8 @@ export default function HeroSlider() {
             key={index}
             className={`transition-all duration-300 ${
               index === current
-                ? "h-2.5 w-8 rounded-full bg-white"
-                : "h-2.5 w-2.5 rounded-full bg-white/55"
+                ? "h-2 w-8 rounded-[1px] bg-white"
+                : "h-2 w-2 rounded-[1px] bg-white/55"
             }`}
           />
         ))}

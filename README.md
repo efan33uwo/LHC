@@ -20,6 +20,20 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Booking Email Setup
+
+The booking form sends appointment requests through the server route at `app/api/booking/route.ts` using Resend.
+
+Create `.env.local` from `.env.example` and set:
+
+```bash
+BOOKING_TO_EMAIL=support@langhamhc.ca
+BOOKING_FROM_EMAIL="Langham Health Center <appointments@langhamhc.ca>"
+RESEND_API_KEY=re_your_resend_api_key_here
+```
+
+For production, add the same variables in the hosting provider. The `langhamhc.ca` domain must be verified in Resend so `appointments@langhamhc.ca` can be used as the sender. The form will return a configuration error instead of pretending to send if these values are missing.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

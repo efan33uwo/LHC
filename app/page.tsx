@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import BookingCTA from "@/components/booking-cta";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import Hero from "@/components/hero";
 import ScrollReveal from "@/components/scroll-reveal";
-import SectionTitle from "@/components/section-title";
+import ServicesShowcase from "@/components/services-showcase";
 import { clinicContent } from "@/lib/clinic-content";
 import { Language, t } from "@/lib/translations";
 
@@ -46,62 +45,7 @@ export default function Home() {
           secondaryHref="/services"
         />
 
-        <section id="services" className="w-full bg-[#eef5f0] py-24">
-          <div className="mx-auto grid w-full max-w-7xl gap-14 px-6 lg:grid-cols-[0.8fr_1.2fr] lg:px-10">
-            <ScrollReveal>
-              <div className="lg:sticky lg:top-28">
-                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-green-700">
-                  Services
-                </p>
-                <h2 className="mt-4 text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-                  Care designed for day to day health and long term wellness
-                </h2>
-                <p className="mt-6 max-w-xl text-base leading-8 text-slate-600 sm:text-lg">
-                  Langham Health Center brings together family medicine,
-                  chiropractic care, and supportive wellness services in one
-                  accessible setting.
-                </p>
-
-                <div className="mt-8">
-                  <Link
-                    href="/services"
-                    className="inline-flex items-center justify-center rounded-full border border-green-300 bg-white px-6 py-3 text-sm font-medium text-green-900 transition hover:bg-green-100"
-                  >
-                    View All Services
-                  </Link>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              {clinicContent.services[language].map((service, index) => (
-                <ScrollReveal key={service.title}>
-                  <article
-                    className={`rounded-[2rem] p-8 shadow-sm ${
-                      index % 3 === 0
-                        ? "bg-white"
-                        : index % 3 === 1
-                        ? "bg-[#dfeee4]"
-                        : "bg-[#f3f6f4]"
-                    }`}
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-sm font-semibold text-green-800 shadow-sm">
-                      {service.icon}
-                    </div>
-
-                    <h3 className="mt-6 text-2xl font-semibold tracking-tight text-slate-900">
-                      {service.title}
-                    </h3>
-
-                    <p className="mt-4 text-sm leading-8 text-slate-600 sm:text-base">
-                      {service.description}
-                    </p>
-                  </article>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
+        <ServicesShowcase services={clinicContent.services[language]} />
 
         <section className="w-full bg-slate-900 py-24 text-white">
           <div className="mx-auto w-full max-w-7xl px-6 lg:px-10">
@@ -160,7 +104,7 @@ export default function Home() {
             <div className="mt-14 grid gap-8 sm:grid-cols-2 xl:grid-cols-4">
               {staffCards.map((practitioner) => (
                 <ScrollReveal key={`${practitioner.name}-${practitioner.slot}`}>
-                  <article className="overflow-hidden rounded-[2rem] border border-[#e3ebe6] bg-[#f8fcf9]">
+                  <article className="overflow-hidden rounded-[3px] border border-[#e3ebe6] bg-[#f8fcf9]">
                     <div className="flex h-[300px] items-center justify-center bg-[#dfeee4] text-center text-sm font-semibold uppercase tracking-[0.14em] text-green-800">
                       Staff Photo
                     </div>
@@ -183,60 +127,73 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="w-full bg-[#e9f3ec] py-24">
-          <div className="mx-auto w-full max-w-7xl px-6 lg:px-10">
+        <section
+          id="book"
+          className="w-full border-t border-[#c8dacb] bg-[linear-gradient(135deg,#edf7ef_0%,#e3f0e6_48%,#f5faf6_100%)] py-12 sm:py-14"
+        >
+          <div className="mx-auto w-full max-w-[1500px] px-6 lg:px-12">
             <ScrollReveal>
-              <div className="grid gap-10 rounded-[2rem] border border-green-200 bg-white p-6 shadow-sm sm:p-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-                <div>
+              <div className="grid gap-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-stretch">
+                <div className="flex min-h-[430px] flex-col justify-center border border-[#c8dacb] bg-white p-7 shadow-[0_16px_36px_rgba(22,52,42,0.08)] sm:p-9 lg:min-h-[500px]">
                   <p className="text-sm font-semibold uppercase tracking-[0.16em] text-green-700">
-                    Our Location
+                    Visit and book
                   </p>
-                  <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-                    Easy to find and easy to reach
+                  <h2
+                    className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl lg:leading-[1]"
+                    style={{ fontFamily: "var(--font-source-serif)" }}
+                  >
+                    Find the clinic and request your appointment in one place.
                   </h2>
-                  <p className="mt-5 text-sm leading-8 text-slate-600 sm:text-base">
-                    {clinicContent.address}
-                  </p>
-                  <p className="text-sm leading-8 text-slate-600 sm:text-base">
-                    {clinicContent.hours}
+
+                  <p className="mt-5 max-w-xl text-sm leading-7 text-slate-600 sm:text-base">
+                    Use booking for appointment requests, or open the map when
+                    you are planning your visit to the clinic.
                   </p>
 
-                  <div className="mt-8">
+                  <div className="mt-6 grid gap-3 text-sm leading-7 text-slate-600 sm:text-base">
+                    <p>
+                      <span className="font-semibold text-slate-900">
+                        Address:
+                      </span>{" "}
+                      {clinicContent.address}
+                    </p>
+                    <p>
+                      <span className="font-semibold text-slate-900">
+                        Hours:
+                      </span>{" "}
+                      {clinicContent.hours}
+                    </p>
+                  </div>
+
+                  <div className="mt-8 flex flex-wrap gap-3">
+                    <Link
+                      href="/booking"
+                      className="inline-flex min-h-11 items-center justify-center rounded-[3px] border border-[#d9b36f] bg-[#d9b36f] px-6 py-3 text-sm font-semibold text-slate-950 shadow-sm transition hover:bg-[#caa15a]"
+                    >
+                      {t(language, "bookingCta")}
+                    </Link>
                     <a
                       href={clinicContent.mapLink}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center justify-center rounded-full bg-green-200 px-6 py-3 text-sm font-medium text-green-950 transition hover:bg-green-300"
+                      className="inline-flex min-h-11 items-center justify-center rounded-[3px] border border-[#b7c7b8] bg-white px-6 py-3 text-sm font-semibold text-[#173f32] transition hover:bg-[#eef5ef]"
                     >
                       Open in Google Maps
                     </a>
                   </div>
                 </div>
 
-                <div className="overflow-hidden rounded-[1.5rem] border border-green-100">
+                <div className="min-h-[430px] overflow-hidden border border-[#c8dacb] bg-white shadow-[0_16px_36px_rgba(22,52,42,0.08)] lg:min-h-[500px]">
                   <iframe
-                    title="Langham Health Center map"
+                    title="Langham Health Center Google map"
                     src={clinicContent.mapEmbedLink}
-                    className="h-[340px] w-full border-0 sm:h-[420px]"
+                    className="h-[430px] w-full border-0 lg:h-[500px]"
                     loading="lazy"
                     allowFullScreen
                     referrerPolicy="no-referrer-when-downgrade"
                   />
                 </div>
               </div>
-            </ScrollReveal>
-          </div>
-        </section>
-
-        <section id="book" className="w-full bg-[#d7ebdd] py-24">
-          <div className="mx-auto w-full max-w-7xl px-6 lg:px-10">
-            <ScrollReveal>
-              <BookingCTA
-                title={t(language, "bookingTitle")}
-                description={t(language, "bookingDescription")}
-                buttonText={t(language, "bookingCta")}
-                buttonHref="/booking"
-              />
             </ScrollReveal>
           </div>
         </section>

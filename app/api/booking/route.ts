@@ -4,6 +4,7 @@ import { clinicContent } from "@/lib/clinic-content";
 export const runtime = "nodejs";
 
 type BookingBody = {
+  company?: string;
   name?: string;
   phone?: string;
   email?: string;
@@ -12,17 +13,50 @@ type BookingBody = {
 };
 
 const MAX_LEN = 4000;
+const RATE_LIMIT_MAX = 5;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const submissionsByIp = new Map<string, { count: number; resetAt: number }>();
 
 function trimField(value: unknown, max: number): string {
   if (typeof value !== "string") return "";
   return value.trim().slice(0, max);
 }
 
+function getClientIp(request: Request): string {
+  return (
+    request.headers.get("cf-connecting-ip") ||
+    request.headers.get("x-real-ip") ||
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "unknown"
+  );
+}
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const current = submissionsByIp.get(ip);
+
+  if (!current || current.resetAt < now) {
+    submissionsByIp.set(ip, {
+      count: 1,
+      resetAt: now + RATE_LIMIT_WINDOW_MS,
+    });
+    return false;
+  }
+
+  if (current.count >= RATE_LIMIT_MAX) {
+    return true;
+  }
+
+  current.count += 1;
+  return false;
+}
+
 async function sendViaResend(payload: {
-  to: string;
   from: string;
+  replyTo?: string;
   subject: string;
   text: string;
+  to: string;
 }): Promise<{ ok: boolean; error?: string }> {
   const key = process.env.RESEND_API_KEY;
   if (!key) return { ok: false, error: "Resend not configured" };
@@ -35,9 +69,10 @@ async function sendViaResend(payload: {
     },
     body: JSON.stringify({
       from: payload.from,
-      to: [payload.to],
+      reply_to: payload.replyTo,
       subject: payload.subject,
       text: payload.text,
+      to: [payload.to],
     }),
   });
 
@@ -45,36 +80,13 @@ async function sendViaResend(payload: {
     const errText = await res.text().catch(() => "");
     return { ok: false, error: errText || res.statusText };
   }
-  return { ok: true };
-}
 
-async function sendViaFormSubmit(
-  toEmail: string,
-  fields: Record<string, string>
-): Promise<{ ok: boolean; error?: string }> {
-  const url = `https://formsubmit.co/ajax/${encodeURIComponent(toEmail)}`;
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({
-      ...fields,
-      _subject: `Appointment request — ${clinicContent.name}`,
-      _captcha: false,
-    }),
-  });
-
-  if (!res.ok) {
-    const errText = await res.text().catch(() => "");
-    return { ok: false, error: errText || res.statusText };
-  }
   return { ok: true };
 }
 
 export async function POST(request: Request) {
   let body: BookingBody;
+
   try {
     body = (await request.json()) as BookingBody;
   } catch {
@@ -86,6 +98,11 @@ export async function POST(request: Request) {
   const email = trimField(body.email, 200);
   const reason = trimField(body.reason, MAX_LEN);
   const language = trimField(body.language, 20);
+  const company = trimField(body.company, 200);
+
+  if (company) {
+    return NextResponse.json({ ok: true });
+  }
 
   if (!name || !phone || !reason) {
     return NextResponse.json(
@@ -94,69 +111,59 @@ export async function POST(request: Request) {
     );
   }
 
-  const to =
-    process.env.BOOKING_TO_EMAIL?.trim() || clinicContent.email.trim();
-  if (!to) {
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json(
-      { error: "Server is not configured to receive bookings." },
+      { error: "Please enter a valid email address." },
+      { status: 400 }
+    );
+  }
+
+  if (isRateLimited(getClientIp(request))) {
+    return NextResponse.json(
+      { error: "Too many requests. Please call the clinic." },
+      { status: 429 }
+    );
+  }
+
+  const to = process.env.BOOKING_TO_EMAIL?.trim() || clinicContent.email.trim();
+  const from = process.env.BOOKING_FROM_EMAIL?.trim();
+
+  if (!process.env.RESEND_API_KEY || !from || !to) {
+    return NextResponse.json(
+      { error: "Booking email is not configured. Please call the clinic." },
       { status: 503 }
     );
   }
 
-  const textLines = [
+  const text = [
     `Clinic: ${clinicContent.name}`,
-    `Language preference (if provided): ${language || "—"}`,
-    ``,
+    `Language preference (if provided): ${language || "-"}`,
+    "",
     `Name: ${name}`,
     `Phone: ${phone}`,
-    `Email: ${email || "—"}`,
-    ``,
-    `Reason for visit:`,
+    `Email: ${email || "-"}`,
+    "",
+    "Reason for visit:",
     reason,
-    ``,
+    "",
     `Submitted at: ${new Date().toISOString()}`,
-  ];
-  const text = textLines.join("\n");
+  ].join("\n");
 
-  if (process.env.RESEND_API_KEY) {
-    const from = process.env.BOOKING_FROM_EMAIL?.trim();
-    if (!from) {
-      return NextResponse.json(
-        { error: "BOOKING_FROM_EMAIL is required when using Resend." },
-        { status: 503 }
-      );
-    }
-    const result = await sendViaResend({
-      to,
-      from,
-      subject: `Appointment request — ${name}`,
-      text,
-    });
-    if (!result.ok) {
-      console.error("Resend error:", result.error);
-      return NextResponse.json(
-        { error: "Could not send notification. Please call the clinic." },
-        { status: 502 }
-      );
-    }
-    return NextResponse.json({ ok: true, channel: "resend" });
-  }
-
-  const result = await sendViaFormSubmit(to, {
-    name,
-    phone,
-    email: email || "not provided",
-    reason,
-    language: language || "not specified",
+  const result = await sendViaResend({
+    from,
+    replyTo: email || undefined,
+    subject: `Appointment request - ${name}`,
+    text,
+    to,
   });
 
   if (!result.ok) {
-    console.error("FormSubmit error:", result.error);
+    console.error("Resend error:", result.error);
     return NextResponse.json(
       { error: "Could not send notification. Please call the clinic." },
       { status: 502 }
     );
   }
 
-  return NextResponse.json({ ok: true, channel: "formsubmit" });
+  return NextResponse.json({ ok: true, channel: "resend" });
 }

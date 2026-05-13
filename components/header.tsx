@@ -25,7 +25,6 @@ export default function Header({
     { href: "/", label: t(language, "navHome") },
     { href: "/about", label: t(language, "navAbout") },
     { href: "/services", label: t(language, "navServices") },
-    { href: "/booking", label: t(language, "navBooking") },
     { href: "/contact", label: t(language, "navContact") },
   ];
 
@@ -33,8 +32,8 @@ export default function Header({
     const isActive = pathname === href;
 
     return isActive
-      ? "rounded-full bg-green-100 px-4 py-2 font-medium text-green-900"
-      : "rounded-full px-4 py-2 text-slate-700 transition hover:bg-green-50 hover:text-green-700";
+      ? "rounded-[3px] bg-green-100 px-3.5 py-2 font-medium text-green-900"
+      : "rounded-[3px] px-3.5 py-2 text-slate-700 transition hover:bg-green-50 hover:text-green-700";
   };
 
   return (
@@ -47,25 +46,25 @@ export default function Header({
       />
 
       <header className="sticky top-0 z-30 border-b border-green-100 bg-white/95 backdrop-blur">
-        <div className="grid w-full grid-cols-[auto_1fr_auto] items-center gap-8 px-8 py-4 xl:px-14">
-          <Link href="/" className="flex min-w-0 items-center gap-4 justify-self-start">
+        <div className="flex w-full items-center justify-between gap-5 px-5 py-3 sm:px-8 xl:px-10">
+          <Link href="/" className="flex min-w-0 shrink-0 items-center gap-3">
             <Image
               src="/Langham-Health-Logo.png"
               alt={`${clinicName} logo`}
-              width={150}
-              height={150}
-              className="h-24 w-24 shrink-0 object-contain sm:h-28 sm:w-28"
+              width={96}
+              height={96}
+              className="h-16 w-16 shrink-0 object-contain sm:h-20 sm:w-20"
               priority
             />
             <span
-              className="truncate text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl"
+              className="max-w-[15rem] truncate text-2xl font-semibold tracking-tight text-slate-900 sm:max-w-[24rem] sm:text-3xl xl:text-2xl 2xl:text-3xl"
               style={{ fontFamily: "var(--font-source-serif)" }}
             >
               {clinicName}
             </span>
           </Link>
 
-          <nav className="hidden items-center justify-center gap-6 text-lg xl:flex">
+          <nav className="hidden flex-1 items-center justify-center gap-2 text-base xl:flex">
             {navItems.map((item) => (
               <Link key={item.href} href={item.href} className={getNavClass(item.href)}>
                 {item.label}
@@ -73,10 +72,10 @@ export default function Header({
             ))}
           </nav>
 
-          <div className="flex items-center gap-4 justify-self-end">
+          <div className="flex shrink-0 items-center gap-3">
             <Link
               href="/booking"
-              className="rounded-full border border-green-200 bg-green-100 px-7 py-3 text-base font-medium text-green-900 transition hover:bg-green-200"
+              className="rounded-[3px] border border-green-200 bg-green-100 px-5 py-2.5 text-sm font-medium text-green-900 transition hover:bg-green-200 sm:px-6 sm:text-base"
             >
               {t(language, "navBooking")}
             </Link>

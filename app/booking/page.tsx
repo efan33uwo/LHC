@@ -13,6 +13,7 @@ export default function BookingPage() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [reason, setReason] = useState("");
+  const [company, setCompany] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -29,6 +30,7 @@ export default function BookingPage() {
           name,
           phone,
           email,
+          company,
           reason,
           language,
         }),
@@ -46,6 +48,7 @@ export default function BookingPage() {
       setName("");
       setPhone("");
       setEmail("");
+      setCompany("");
       setReason("");
     } catch {
       setStatus("error");
@@ -178,6 +181,18 @@ export default function BookingPage() {
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
                     className={inputClass}
+                  />
+                </label>
+
+                <label className="hidden" aria-hidden="true">
+                  Company
+                  <input
+                    type="text"
+                    name="company"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
                   />
                 </label>
 
