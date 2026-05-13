@@ -17,6 +17,8 @@ const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const submissionsByIp = new Map<string, { count: number; resetAt: number }>();
 
+const CLINIC_DISPLAY_NAME = "Langham Health Center";
+
 function trimField(value: unknown, max: number): string {
   if (typeof value !== "string") return "";
   return value.trim().slice(0, max);
@@ -126,7 +128,20 @@ export async function POST(request: Request) {
     );
   }
 
-  const to = process.env.BOOKING_TO_EMAIL?.trim() || clinicContent.email.trim();
+  const clinicDetails = clinicContent as typeof clinicContent & {
+    phone?: string;
+    address?: string;
+    email?: string;
+    name?: string;
+  };
+
+  const clinicPhone = clinicDetails.phone?.trim() || "Please contact the clinic directly.";
+  const clinicAddress = clinicDetails.address?.trim() || "Please visit our website for location details.";
+
+  const to =
+    process.env.BOOKING_TO_EMAIL?.trim() ||
+    clinicDetails.email?.trim();
+
   const from = process.env.BOOKING_FROM_EMAIL?.trim();
 
   if (!process.env.RESEND_API_KEY || !from || !to) {
@@ -137,12 +152,13 @@ export async function POST(request: Request) {
   }
 
   const clinicNotificationText = [
-    `Clinic: ${clinicContent.name}`,
-    `Language preference (if provided): ${language || "-"}`,
+    `New appointment request for ${CLINIC_DISPLAY_NAME}`,
     "",
+    "Patient Details",
     `Name: ${name}`,
     `Phone: ${phone}`,
     `Email: ${email || "-"}`,
+    `Language preference: ${language || "-"}`,
     "",
     "Reason for visit:",
     reason,
@@ -154,7 +170,7 @@ export async function POST(request: Request) {
   const clinicResult = await sendViaResend({
     from,
     replyTo: email || undefined,
-    subject: `Appointment request - ${name}`,
+    subject: `New appointment request - ${name}`,
     text: clinicNotificationText,
     to,
   });
@@ -169,24 +185,32 @@ export async function POST(request: Request) {
 
   let confirmationSent = false;
 
-  // 2. Send confirmation email to the customer if they provided an email
+  // 2. Send polished confirmation email to the customer
   if (email) {
     const confirmationText = [
       `Hi ${name},`,
       "",
-      `Thank you for contacting ${clinicContent.name}.`,
+      `Thank you for contacting ${CLINIC_DISPLAY_NAME}.`,
       "",
-      "We received your appointment request and someone from our team will get back to you shortly.",
+      "This email confirms that we have received your appointment request.",
       "",
-      "If this is urgent, please contact the clinic directly.",
+      "Our team will review your request and get back to you within approximately 6–12 hours.",
       "",
-      `Best,`,
-      `${clinicContent.name}`,
+      "Please note that this request does not confirm an appointment time until a member of our team contacts you directly.",
+      "",
+      "Clinic Information",
+      `Phone: ${clinicPhone}`,
+      `Address: ${clinicAddress}`,
+      "",
+      "If your matter is urgent, please call the clinic directly instead of waiting for an email response.",
+      "",
+      "Thank you,",
+      CLINIC_DISPLAY_NAME,
     ].join("\n");
 
     const confirmationResult = await sendViaResend({
       from,
-      subject: "We received your appointment request",
+      subject: `We received your appointment request - ${CLINIC_DISPLAY_NAME}`,
       text: confirmationText,
       to: email,
     });
