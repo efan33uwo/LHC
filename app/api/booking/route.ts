@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isBookingTimeSlot } from "@/lib/booking-options";
 import { clinicContent } from "@/lib/clinic-content";
 
 export const runtime = "nodejs";
@@ -9,6 +10,9 @@ type BookingBody = {
   phone?: string;
   email?: string;
   reason?: string;
+  service?: string;
+  preferredDate?: string;
+  preferredTime?: string;
   language?: string;
 };
 
@@ -22,6 +26,14 @@ const CLINIC_DISPLAY_NAME = "Langham Health Center";
 function trimField(value: unknown, max: number): string {
   if (typeof value !== "string") return "";
   return value.trim().slice(0, max);
+}
+
+function isChinese(language: string): boolean {
+  return language.toLowerCase().startsWith("zh");
+}
+
+function localizedError(language: string, en: string, zh: string): string {
+  return isChinese(language) ? zh : en;
 }
 
 function getClientIp(request: Request): string {
@@ -99,31 +111,96 @@ export async function POST(request: Request) {
   const phone = trimField(body.phone, 80);
   const email = trimField(body.email, 200);
   const reason = trimField(body.reason, MAX_LEN);
+  const service = trimField(body.service, 200);
+  const preferredDate = trimField(body.preferredDate, 20);
+  const preferredTime = trimField(body.preferredTime, 40);
   const language = trimField(body.language, 20);
   const company = trimField(body.company, 200);
 
-  // Honeypot spam protection
+  // Honeypot spam protection.
   if (company) {
     return NextResponse.json({ ok: true });
   }
 
-  if (!name || !phone || !reason) {
+  if (!name || !phone || !service || !preferredDate || !preferredTime) {
     return NextResponse.json(
-      { error: "Name, phone, and reason for visit are required." },
+      {
+        error: localizedError(
+          language,
+          "Name, phone, service, preferred date, and preferred time are required.",
+          "请填写姓名、电话，并选择服务项目、希望日期和希望时间。"
+        ),
+      },
       { status: 400 }
     );
   }
 
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json(
-      { error: "Please enter a valid email address." },
+      {
+        error: localizedError(
+          language,
+          "Please enter a valid email address.",
+          "请输入有效的电邮地址。"
+        ),
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(preferredDate)) {
+    return NextResponse.json(
+      {
+        error: localizedError(
+          language,
+          "Please choose a valid preferred date.",
+          "请选择有效的希望日期。"
+        ),
+      },
+      { status: 400 }
+    );
+  }
+
+  const validServices = new Set([
+    ...clinicContent.services.en.map((item) => item.title),
+    ...clinicContent.services.zh.map((item) => item.title),
+  ]);
+
+  if (!validServices.has(service)) {
+    return NextResponse.json(
+      {
+        error: localizedError(
+          language,
+          "Please choose a valid service.",
+          "请选择有效的服务项目。"
+        ),
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!isBookingTimeSlot(preferredTime)) {
+    return NextResponse.json(
+      {
+        error: localizedError(
+          language,
+          "Please choose a valid preferred time.",
+          "请选择有效的希望时间。"
+        ),
+      },
       { status: 400 }
     );
   }
 
   if (isRateLimited(getClientIp(request))) {
     return NextResponse.json(
-      { error: "Too many requests. Please call the clinic." },
+      {
+        error: localizedError(
+          language,
+          "Too many requests. Please call the clinic.",
+          "提交次数过多，请直接致电诊所。"
+        ),
+      },
       { status: 429 }
     );
   }
@@ -135,18 +212,25 @@ export async function POST(request: Request) {
     name?: string;
   };
 
-  const clinicPhone = clinicDetails.phone?.trim() || "Please contact the clinic directly.";
-  const clinicAddress = clinicDetails.address?.trim() || "Please visit our website for location details.";
+  const clinicPhone =
+    clinicDetails.phone?.trim() || "Please contact the clinic directly.";
+  const clinicAddress =
+    clinicDetails.address?.trim() ||
+    "Please visit our website for location details.";
 
-  const to =
-    process.env.BOOKING_TO_EMAIL?.trim() ||
-    clinicDetails.email?.trim();
+  const to = process.env.BOOKING_TO_EMAIL?.trim() || clinicDetails.email?.trim();
 
   const from = process.env.BOOKING_FROM_EMAIL?.trim();
 
   if (!process.env.RESEND_API_KEY || !from || !to) {
     return NextResponse.json(
-      { error: "Booking email is not configured. Please call the clinic." },
+      {
+        error: localizedError(
+          language,
+          "Booking email is not configured. Please call the clinic.",
+          "预约电邮尚未设定，请直接致电诊所。"
+        ),
+      },
       { status: 503 }
     );
   }
@@ -160,13 +244,18 @@ export async function POST(request: Request) {
     `Email: ${email || "-"}`,
     `Language preference: ${language || "-"}`,
     "",
-    "Reason for visit:",
-    reason,
+    "Appointment Request",
+    `Requested service: ${service}`,
+    `Preferred date: ${preferredDate}`,
+    `Preferred time: ${preferredTime}`,
+    "Note: preferred date/time is not confirmed until staff contacts the patient.",
+    "",
+    "Notes or symptoms:",
+    reason || "-",
     "",
     `Submitted at: ${new Date().toISOString()}`,
   ].join("\n");
 
-  // 1. Send booking request to the clinic/support inbox
   const clinicResult = await sendViaResend({
     from,
     replyTo: email || undefined,
@@ -178,45 +267,82 @@ export async function POST(request: Request) {
   if (!clinicResult.ok) {
     console.error("Resend clinic notification error:", clinicResult.error);
     return NextResponse.json(
-      { error: "Could not send notification. Please call the clinic." },
+      {
+        error: localizedError(
+          language,
+          "Could not send notification. Please call the clinic.",
+          "无法发送预约通知，请直接致电诊所。"
+        ),
+      },
       { status: 502 }
     );
   }
 
   let confirmationSent = false;
 
-  // 2. Send polished confirmation email to the customer
   if (email) {
-    const confirmationText = [
-      `Hi ${name},`,
-      "",
-      `Thank you for contacting ${CLINIC_DISPLAY_NAME}.`,
-      "",
-      "This email confirms that we have received your appointment request.",
-      "",
-      "Our team will review your request and get back to you within approximately 6–12 hours.",
-      "",
-      "Please note that this request does not confirm an appointment time until a member of our team contacts you directly.",
-      "",
-      "Clinic Information",
-      `Phone: ${clinicPhone}`,
-      `Address: ${clinicAddress}`,
-      "",
-      "If your matter is urgent, please call the clinic directly instead of waiting for an email response.",
-      "",
-      "Thank you,",
-      CLINIC_DISPLAY_NAME,
-    ].join("\n");
+    const confirmationText = isChinese(language)
+      ? [
+          `${name} 您好，`,
+          "",
+          `感谢您联系 ${CLINIC_DISPLAY_NAME}。`,
+          "",
+          "我们已经收到您的预约申请。",
+          "",
+          `申请服务：${service}`,
+          `希望日期：${preferredDate}`,
+          `希望时间：${preferredTime}`,
+          "",
+          "请注意：以上日期和时间只是您的偏好，并不代表预约已经确认。工作人员会查看申请，并联系您确认最接近的可预约时间。",
+          "",
+          "诊所资料",
+          `电话：${clinicPhone}`,
+          `地址：${clinicAddress}`,
+          "",
+          "如果情况紧急，请直接致电诊所，不要等待电邮回复。如有严重或紧急症状，请拨打 911 或前往急诊。",
+          "",
+          "谢谢，",
+          CLINIC_DISPLAY_NAME,
+        ].join("\n")
+      : [
+          `Hi ${name},`,
+          "",
+          `Thank you for contacting ${CLINIC_DISPLAY_NAME}.`,
+          "",
+          "This email confirms that we have received your appointment request.",
+          "",
+          `Requested service: ${service}`,
+          `Preferred date: ${preferredDate}`,
+          `Preferred time: ${preferredTime}`,
+          "",
+          "Please note that your preferred date and time are not confirmed until a member of our team contacts you directly.",
+          "",
+          "Our team will review your request and get back to you as soon as possible.",
+          "",
+          "Clinic Information",
+          `Phone: ${clinicPhone}`,
+          `Address: ${clinicAddress}`,
+          "",
+          "If your matter is urgent, please call the clinic directly instead of waiting for an email response.",
+          "",
+          "Thank you,",
+          CLINIC_DISPLAY_NAME,
+        ].join("\n");
 
     const confirmationResult = await sendViaResend({
       from,
-      subject: `We received your appointment request - ${CLINIC_DISPLAY_NAME}`,
+      subject: isChinese(language)
+        ? `我们已收到您的预约申请 - ${CLINIC_DISPLAY_NAME}`
+        : `We received your appointment request - ${CLINIC_DISPLAY_NAME}`,
       text: confirmationText,
       to: email,
     });
 
     if (!confirmationResult.ok) {
-      console.error("Resend customer confirmation error:", confirmationResult.error);
+      console.error(
+        "Resend customer confirmation error:",
+        confirmationResult.error
+      );
     } else {
       confirmationSent = true;
     }

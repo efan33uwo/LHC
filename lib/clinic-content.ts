@@ -192,6 +192,11 @@ export const clinicContent = {
         role: "Patient Coordination",
         bio: "Our clinic support staff help patients with scheduling, communication, and a smooth front-desk experience from booking to follow-up.",
       },
+      {
+        name: "Massage Therapist Team",
+        role: "Registered Massage Therapy",
+        bio: "Our massage therapy team supports soft-tissue care, muscle tension relief, recovery support, and rehabilitation plans.",
+      },
     ],
     zh: [
       {
@@ -208,6 +213,11 @@ export const clinicContent = {
         name: "门诊支持团队",
         role: "患者协调",
         bio: "门诊支持人员协助患者处理预约、沟通及从登记到后续跟进的整体前台体验。",
+      },
+      {
+        name: "注册按摩治疗团队",
+        role: "注册按摩治疗",
+        bio: "按摩治疗团队为软组织护理、肌肉紧张缓解、恢复支持和康复计划提供服务。",
       },
     ],
   } as Localized<PractitionerItem[]>,

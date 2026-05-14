@@ -13,15 +13,13 @@ import { Language, t } from "@/lib/translations";
 
 const homeCopy = {
   en: {
-    heroQuickLinks: ["MVA Claims", "Chiropractic", "Physiotherapy + RMT"],
     whyEyebrow: "Why Patients Choose Us",
     whyTitle:
       "Professional care in a setting that feels clear, calm, and well run",
     staffEyebrow: "Meet Your Staff",
+    staffStockNote: "Representative stock images, not actual staff photos.",
     staffTitle:
       "A clinic team focused on comfort, coordination, and patient care",
-    staffSubtitle:
-      "Replace these slots with real staff portraits and concise biographies to make the clinic feel familiar before patients arrive.",
     staffFallbackName: "Staff Member",
     staffFallbackRole: "Team Member",
     staffFallbackBio: "Add staff photo, role, and short bio here when ready.",
@@ -35,13 +33,10 @@ const homeCopy = {
     mapCta: "Open in Google Maps",
   },
   zh: {
-    heroQuickLinks: ["车祸理赔", "脊椎矫正", "物理治疗 + 按摩"],
     whyEyebrow: "患者选择我们的原因",
     whyTitle: "清晰、安心、专业管理的诊所护理环境",
     staffEyebrow: "认识团队",
     staffTitle: "以舒适、协调和患者护理为核心的诊所团队",
-    staffSubtitle:
-      "可将这些位置替换为真实员工照片和简短介绍，让患者到访前更熟悉诊所。",
     staffFallbackName: "团队成员",
     staffFallbackRole: "诊所团队",
     staffFallbackBio: "准备好后可在此加入员工照片、职位和简短介绍。",
@@ -75,7 +70,7 @@ function StaffPhoto({
   }, [src]);
 
   return (
-    <div className="relative flex h-[300px] items-center justify-center overflow-hidden bg-[#dfeee4] text-center text-sm font-semibold uppercase tracking-[0.14em] text-green-800">
+    <div className="relative flex h-[260px] items-center justify-center overflow-hidden bg-[#dfeee4] text-center text-sm font-semibold uppercase tracking-[0.14em] text-green-800 sm:h-[300px]">
       {isReady ? (
         <Image
           src={src}
@@ -94,6 +89,10 @@ function StaffPhoto({
 export default function Home() {
   const [language, setLanguage] = useState<Language>("en");
   const copy = homeCopy[language];
+  const staffStockNote =
+    language === "zh"
+      ? "代表性图片，非实际员工照片。"
+      : homeCopy.en.staffStockNote;
 
   const staffCards = Array.from({ length: 4 }).map((_, index) => {
     const practitioner = clinicContent.practitioners[language][index] ?? {
@@ -125,7 +124,6 @@ export default function Home() {
           secondaryCta={t(language, "heroSecondaryCta")}
           primaryHref="/booking"
           secondaryHref="/services"
-          quickLinks={copy.heroQuickLinks as string[]}
         />
 
         <ServicesShowcase
@@ -133,25 +131,25 @@ export default function Home() {
           language={language}
         />
 
-        <section className="relative isolate w-full overflow-hidden bg-[#10261f] py-24 text-white">
-          <div className="absolute inset-0 -z-10 bg-[url('/backgrounds/why-patients.png')] bg-cover bg-center opacity-35" />
-          <div className="absolute inset-0 -z-10 bg-[#10261f]/88" />
+        <section className="relative isolate w-full overflow-hidden bg-[#10261f] py-16 text-white sm:py-20 lg:py-24">
+          <div className="absolute inset-0 -z-10 bg-[url('/backgrounds/why-patients.png')] bg-cover bg-center opacity-55" />
+          <div className="absolute inset-0 -z-10 bg-[#10261f]/72" />
           <div className="mx-auto w-full max-w-7xl px-6 lg:px-10">
             <ScrollReveal>
-              <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+              <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-start lg:gap-12">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-[0.16em] text-green-300">
                     {copy.whyEyebrow as string}
                   </p>
                   <h2
-                    className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl"
+                    className="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl"
                     style={{ fontFamily: "var(--font-source-serif)" }}
                   >
                     {copy.whyTitle as string}
                   </h2>
                 </div>
 
-                <div className="grid gap-8 md:grid-cols-2">
+                <div className="grid gap-6 md:grid-cols-2 lg:gap-8">
                   {clinicContent.whyChooseUs[language].map((card) => (
                     <div
                       key={card.title}
@@ -171,29 +169,26 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="w-full bg-white py-24">
-          <div className="mx-auto w-full max-w-7xl px-6 lg:px-10">
+        <section className="w-full bg-white py-16 sm:py-20 lg:py-24">
+          <div className="mx-auto w-full max-w-7xl px-4 min-[390px]:px-5 sm:px-6 lg:px-10">
             <ScrollReveal>
-              <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.16em] text-green-700">
-                    {copy.staffEyebrow as string}
-                  </p>
-                  <h2
-                    className="mt-4 text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl"
-                    style={{ fontFamily: "var(--font-source-serif)" }}
-                  >
-                    {copy.staffTitle as string}
-                  </h2>
-                </div>
-
-                <p className="max-w-xl text-base leading-8 text-slate-600 sm:text-lg">
-                  {copy.staffSubtitle as string}
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-green-700">
+                  {copy.staffEyebrow as string}
                 </p>
+                <p className="mt-1 text-[0.65rem] font-medium uppercase tracking-[0.12em] text-slate-400">
+                  {staffStockNote}
+                </p>
+                <h2
+                  className="mt-4 max-w-5xl text-3xl font-semibold tracking-tight text-slate-900 min-[390px]:text-4xl sm:text-5xl lg:text-6xl lg:leading-[1.02]"
+                  style={{ fontFamily: "var(--font-source-serif)" }}
+                >
+                  {copy.staffTitle as string}
+                </h2>
               </div>
             </ScrollReveal>
 
-            <div className="mt-14 grid gap-8 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="mt-10 grid gap-6 sm:mt-14 sm:grid-cols-2 sm:gap-8 xl:grid-cols-4">
               {staffCards.map((practitioner) => (
                 <ScrollReveal key={`${practitioner.name}-${practitioner.slot}`}>
                   <article className="overflow-hidden rounded-[3px] border border-[#e3ebe6] bg-[#f8fcf9]">
@@ -223,17 +218,17 @@ export default function Home() {
 
         <section
           id="book"
-          className="w-full border-t border-[#c8dacb] bg-[linear-gradient(135deg,#edf7ef_0%,#e3f0e6_48%,#f5faf6_100%)] py-12 sm:py-14"
+          className="w-full border-t border-[#c8dacb] bg-[linear-gradient(135deg,#edf7ef_0%,#e3f0e6_48%,#f5faf6_100%)] py-8 sm:py-12 lg:py-14"
         >
-          <div className="mx-auto w-full max-w-[1500px] px-6 lg:px-12">
+          <div className="mx-auto w-full max-w-[1500px] px-4 min-[390px]:px-5 sm:px-6 lg:px-12">
             <ScrollReveal>
               <div className="grid gap-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-stretch">
-                <div className="flex min-h-[430px] flex-col justify-center border border-[#c8dacb] bg-white p-7 shadow-[0_16px_36px_rgba(22,52,42,0.08)] sm:p-9 lg:min-h-[500px]">
+                <div className="flex flex-col justify-center border border-[#c8dacb] bg-white p-6 shadow-[0_16px_36px_rgba(22,52,42,0.08)] sm:p-9 lg:min-h-[500px]">
                   <p className="text-sm font-semibold uppercase tracking-[0.16em] text-green-700">
                     {copy.visitEyebrow as string}
                   </p>
                   <h2
-                    className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl lg:leading-[1]"
+                    className="mt-4 text-2xl font-semibold tracking-tight text-slate-900 min-[390px]:text-3xl sm:text-4xl lg:text-5xl lg:leading-[1]"
                     style={{ fontFamily: "var(--font-source-serif)" }}
                   >
                     {copy.visitTitle as string}
@@ -258,7 +253,7 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <div className="mt-8 flex flex-wrap gap-3">
+                  <div className="mt-8 grid gap-3 min-[440px]:flex min-[440px]:flex-wrap">
                     <Link
                       href="/booking"
                       className="inline-flex min-h-11 items-center justify-center rounded-[3px] border border-[#d9b36f] bg-[#d9b36f] px-6 py-3 text-sm font-semibold text-slate-950 shadow-sm transition hover:bg-[#caa15a]"
@@ -276,11 +271,11 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="min-h-[430px] overflow-hidden border border-[#c8dacb] bg-white shadow-[0_16px_36px_rgba(22,52,42,0.08)] lg:min-h-[500px]">
+                <div className="min-h-[320px] overflow-hidden border border-[#c8dacb] bg-white shadow-[0_16px_36px_rgba(22,52,42,0.08)] sm:min-h-[380px] lg:min-h-[500px]">
                   <iframe
                     title="Langham Health Center Google map"
                     src={clinicContent.mapEmbedLink}
-                    className="h-[430px] w-full border-0 lg:h-[500px]"
+                    className="h-[320px] w-full border-0 sm:h-[380px] lg:h-[500px]"
                     loading="lazy"
                     allowFullScreen
                     referrerPolicy="no-referrer-when-downgrade"

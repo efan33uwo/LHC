@@ -128,38 +128,38 @@ export default function ServicesShowcase({
       <div className="absolute inset-x-0 top-0 h-px bg-[#d8ded7]" />
       <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,rgba(255,255,255,0.68),rgba(238,247,241,0.9)_48%,rgba(250,244,233,0.76))]" />
 
-      <div className="mx-auto w-full max-w-[1500px] px-6 lg:px-12">
+      <div className="mx-auto w-full max-w-[1500px] px-4 min-[390px]:px-5 sm:px-6 lg:px-12">
         <ScrollReveal>
-          <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 rounded-[3px] border border-[#cfd9cf] bg-white/82 px-4 py-2 text-sm font-semibold uppercase tracking-[0.14em] text-[#3d6f48] shadow-sm">
+              <div className="inline-flex items-center gap-2 rounded-[3px] border border-[#cfd9cf] bg-white/82 px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#3d6f48] shadow-sm sm:px-4 sm:text-sm sm:tracking-[0.14em]">
                 <Sparkles className="h-4 w-4" aria-hidden="true" />
                 {copy.eyebrow}
               </div>
 
               <h2
-                className="mt-4 max-w-4xl text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl lg:text-5xl lg:leading-[1]"
+                className="mt-4 max-w-4xl text-2xl font-semibold tracking-tight text-slate-950 min-[390px]:text-3xl sm:text-4xl lg:text-5xl lg:leading-[1]"
                 style={{ fontFamily: "var(--font-source-serif)" }}
               >
                 {copy.title}
               </h2>
 
-              <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-lg sm:leading-8">
                 {copy.subtitle}
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="grid gap-3 min-[440px]:flex min-[440px]:flex-wrap">
               <Link
                 href="/services"
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[3px] bg-[#173f32] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#225c49]"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[3px] bg-[#173f32] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#225c49] sm:px-6"
               >
                 {copy.allServices}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
               <Link
                 href="/booking"
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[3px] border border-[#d9b36f] bg-[#d9b36f] px-6 py-3 text-sm font-semibold text-slate-950 shadow-sm transition hover:bg-[#caa15a]"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[3px] border border-[#d9b36f] bg-[#d9b36f] px-5 py-3 text-sm font-semibold text-slate-950 shadow-sm transition hover:bg-[#caa15a] sm:px-6"
               >
                 {copy.appointment}
                 <CalendarCheck className="h-4 w-4" aria-hidden="true" />
@@ -169,8 +169,8 @@ export default function ServicesShowcase({
         </ScrollReveal>
 
         <ScrollReveal className="mt-6">
-          <div className="-mx-6 overflow-x-auto px-6 pb-2 lg:mx-0 lg:px-0">
-            <div className="grid min-w-[1320px] grid-cols-9 gap-4 2xl:min-w-0">
+          <div className="-mx-4 snap-x overflow-x-auto px-4 pb-3 min-[390px]:-mx-5 min-[390px]:px-5 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0">
+            <div className="grid auto-cols-[minmax(190px,74vw)] grid-flow-col gap-3 md:auto-cols-[220px] lg:min-w-[1320px] lg:grid-flow-row lg:grid-cols-9 lg:gap-4 2xl:min-w-0">
               {serviceRows.map(({ service, visual, highlights }, index) => {
                 const Icon = visual.icon;
                 const serviceNumber = String(index + 1).padStart(2, "0");
@@ -179,7 +179,7 @@ export default function ServicesShowcase({
                   <Link
                     key={service.title}
                     href="/services"
-                    className={`group flex min-h-[194px] flex-col overflow-hidden rounded-[4px] border border-[#d8ded7] border-t-4 ${categoryAccent[service.category]} bg-white p-4 shadow-[0_12px_26px_rgba(20,48,40,0.065)] transition hover:-translate-y-0.5 hover:border-[#9db09f] hover:shadow-[0_18px_34px_rgba(22,52,42,0.12)]`}
+                    className={`group flex min-h-[188px] snap-start flex-col overflow-hidden rounded-[4px] border border-[#d8ded7] border-t-4 ${categoryAccent[service.category]} bg-white p-4 shadow-[0_12px_26px_rgba(20,48,40,0.065)] transition hover:-translate-y-0.5 hover:border-[#9db09f] hover:shadow-[0_18px_34px_rgba(22,52,42,0.12)] lg:min-h-[194px]`}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <span

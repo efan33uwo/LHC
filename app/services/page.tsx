@@ -210,19 +210,127 @@ const serviceGuides: Record<string, ServiceGuide> = {
   },
 };
 
+const chineseServiceGuides: ServiceGuide[] = [
+  {
+    image: "/services/mva-insurance-claims.jpg",
+    lead: "适合车祸后需要评估、治疗计划、文件说明和理赔相关协助的患者。",
+    helps: ["车祸相关评估", "治疗计划指导", "理赔与保险协调"],
+    note: "请携带理赔号码、保险资料，以及已经收到的相关文件。",
+  },
+  {
+    image: "/services/spinal-cord-injury.jpg",
+    lead: "适合有脊椎相关损伤、活动能力改变、僵硬、疼痛，或需要康复计划的患者。",
+    helps: ["脊椎重点评估", "活动与功能支持", "康复路径规划"],
+    note: "如果症状紧急或严重，请先前往急诊，再预约诊所跟进。",
+  },
+  {
+    image: "/services/sports-injury.jpg",
+    lead: "适合扭伤、拉伤、过度使用疼痛、训练受阻，或希望恢复运动活动的患者。",
+    helps: ["动作评估", "力量与活动度训练", "恢复活动计划"],
+    note: "适用于近期受伤，也适用于运动时反复出现的问题。",
+  },
+  {
+    image: "/services/slip-and-fall-injuries.jpg",
+    lead: "适合在家中、工作场所或公共地方跌倒后出现疼痛、僵硬、软组织不适或活动困难的患者。",
+    helps: ["疼痛与僵硬评估", "关节与软组织支持", "康复文件说明"],
+    note: "如果跌倒涉及理赔，请带上事故资料、报告或保险福利资料。",
+  },
+  {
+    image: "/services/physiotherapy.jpg",
+    lead: "通过动作训练、力量训练、活动度练习、教育和实际康复目标来帮助恢复。",
+    helps: ["重建力量", "改善活动和功能", "居家运动指导"],
+    note: "当活动受限或康复需要清楚计划时，物理治疗通常是很好的开始。",
+  },
+  {
+    image: "/services/chiropractic.jpg",
+    lead: "适合背部、颈部、脊椎、关节、姿势和肌肉骨骼相关问题，需要手法护理的患者。",
+    helps: ["脊椎与关节评估", "背痛与颈痛护理", "姿势压力支持"],
+    note: "如果不确定应选择脊椎矫正还是物理治疗，前台可以协助引导。",
+  },
+  {
+    image: "/services/rmt.jpg",
+    lead: "注册按摩治疗可帮助软组织紧张、恢复支持、压力相关肌肉紧绷和损伤康复计划。",
+    helps: ["软组织紧张", "恢复支持", "肌肉紧绷护理"],
+    note: "可单独预约，也可作为综合康复计划的一部分。",
+  },
+  {
+    image: "/services/acupuncture.jpg",
+    lead: "针灸可作为综合护理的一部分，支持疼痛管理、紧张缓解、恢复和整体健康。",
+    helps: ["疼痛支持", "紧张管理", "恢复护理"],
+    note: "可向前台询问预约时间，以及是否适合您的护理目标。",
+  },
+  {
+    image: "/services/extended-healthcare.jpg",
+    lead: "适合使用延伸医疗保险福利，需要收据、预约资料或服务规划支持的患者。",
+    helps: ["福利使用支持", "收据与就诊资料", "合资格服务规划"],
+    note: "保险计划各有不同，如有需要，请先向保险公司确认福利细节。",
+  },
+];
+
+const servicesPageCopy = {
+  en: {
+    requestCta: "Request appointment",
+    callCta: "Call the clinic",
+    guideEyebrow: "Clinic service guide",
+    guideText:
+      "A larger look at the clinic before patients choose a care path.",
+    jumpTo: "Jump to",
+    detailsEyebrow: "Detailed services",
+    detailsTitle: "Each service has its own care path.",
+    detailsBody:
+      "Instead of repeating the homepage cards, this page explains when each service may be useful and what patients should expect before booking.",
+    careFocus: "Care focus",
+    bookService: "Book this service",
+    serviceFallbackNote:
+      "Reception can help confirm the best appointment type for your visit.",
+    photoAltSuffix: "at Langham Health Center",
+  },
+  zh: {
+    requestCta: "提交预约申请",
+    callCta: "致电诊所",
+    guideEyebrow: "诊所服务指南",
+    guideText: "在选择护理方向前，可先了解诊所环境和服务项目。",
+    jumpTo: "快速前往",
+    detailsEyebrow: "服务详情",
+    detailsTitle: "每项服务都有合适的护理方向。",
+    detailsBody:
+      "此页面不会重复首页卡片，而是说明每项服务适合什么情况，以及预约前患者可以先了解什么。",
+    careFocus: "护理重点",
+    bookService: "预约此服务",
+    serviceFallbackNote: "前台可以协助确认最适合您的预约类型。",
+    photoAltSuffix: "Langham Health Center 服务照片",
+  },
+} as const;
+
 const fallbackServiceImages = ["/clinic-1.jpg", "/clinic-2.jpg", "/clinic-3.jpg"];
 
 function getServiceAnchor(index: number) {
   return `service-${index + 1}`;
 }
 
-function getServiceGuide(service: ServiceItem, highlights: string[]): ServiceGuide {
+function getServiceGuide(
+  language: Language,
+  service: ServiceItem,
+  highlights: string[],
+  index: number
+): ServiceGuide {
+  if (language === "zh") {
+    return (
+      chineseServiceGuides[index] ?? {
+        image: "/clinic-1.jpg",
+        lead: service.description,
+        helps: highlights,
+        note: servicesPageCopy.zh.serviceFallbackNote,
+      }
+    );
+  }
+
   return (
     serviceGuides[service.title] ?? {
       image: "/clinic-1.jpg",
       lead: service.description,
       helps: highlights,
-      note: "Reception can help confirm the best appointment type for your visit.",
+      note: servicesPageCopy.en.serviceFallbackNote,
     }
   );
 }
@@ -279,6 +387,7 @@ function ServiceSectionPhoto({
 
 export default function ServicesPage() {
   const [language, setLanguage] = useState<Language>("en");
+  const copy = servicesPageCopy[language];
   const categories = getCategoryCopy(language);
   const services = clinicContent.services[language];
   const serviceRows = services.map((service, index) => ({
@@ -318,14 +427,14 @@ export default function ServicesPage() {
                   className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[3px] border border-[#d9b36f] bg-[#d9b36f] px-5 py-3 text-sm font-semibold text-slate-950 shadow-sm transition hover:bg-[#caa15a]"
                 >
                   <CalendarCheck className="h-4 w-4" aria-hidden="true" />
-                  Request appointment
+                  {copy.requestCta}
                 </Link>
                 <Link
                   href="/contact"
                   className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[3px] border border-[#b7c7b8] bg-white px-5 py-3 text-sm font-semibold text-[#173f32] transition hover:bg-[#eef5ef]"
                 >
                   <Phone className="h-4 w-4" aria-hidden="true" />
-                  Call the clinic
+                  {copy.callCta}
                 </Link>
               </div>
             </div>
@@ -342,11 +451,10 @@ export default function ServicesPage() {
                 />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/70 via-slate-950/18 to-transparent p-5 text-white sm:p-6">
                   <p className="max-w-md text-sm font-semibold uppercase tracking-[0.16em] text-white/75">
-                    Clinic service guide
+                    {copy.guideEyebrow}
                   </p>
                   <p className="mt-2 max-w-lg text-lg font-semibold leading-7">
-                    A larger look at the clinic before patients choose a care
-                    path.
+                    {copy.guideText}
                   </p>
                 </div>
               </div>
@@ -383,7 +491,7 @@ export default function ServicesPage() {
         <section className="border-b border-[#d8ded7] bg-[#f7faf6]">
           <div className="mx-auto flex w-full max-w-7xl items-center gap-3 overflow-x-auto px-6 py-5 lg:px-10">
             <span className="shrink-0 text-xs font-semibold uppercase tracking-[0.16em] text-[#2f6f4f]">
-              Jump to
+              {copy.jumpTo}
             </span>
             {serviceRows.map(({ service, index }) => (
               <a
@@ -402,26 +510,29 @@ export default function ServicesPage() {
             <div className="mb-8 grid gap-5 border-b border-[#d8ded7] pb-6 lg:grid-cols-[0.78fr_1fr] lg:items-end">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#2f6f4f]">
-                  Detailed services
+                  {copy.detailsEyebrow}
                 </p>
                 <h2
                   className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl"
                   style={{ fontFamily: "var(--font-source-serif)" }}
                 >
-                  Each service has its own care path.
+                  {copy.detailsTitle}
                 </h2>
               </div>
               <p className="max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-                Instead of repeating the homepage cards, this page explains
-                when each service may be useful and what patients should expect
-                before booking.
+                {copy.detailsBody}
               </p>
             </div>
 
             <div className="space-y-5">
               {serviceRows.map(({ service, visual, index }) => {
                 const Icon = visual.icon;
-                const guide = getServiceGuide(service, visual.highlights);
+                const guide = getServiceGuide(
+                  language,
+                  service,
+                  visual.highlights,
+                  index
+                );
 
                 return (
                   <ScrollReveal key={service.title}>
@@ -437,7 +548,7 @@ export default function ServicesPage() {
                               index % fallbackServiceImages.length
                             ]
                           }
-                          alt={`${service.title} at Langham Health Center`}
+                          alt={`${service.title} ${copy.photoAltSuffix}`}
                         />
 
                         <div className="flex items-start justify-between gap-4">
@@ -470,7 +581,7 @@ export default function ServicesPage() {
                       <div className="p-6 sm:p-7 lg:p-8">
                         <div className="flex items-center gap-2 text-sm font-semibold text-[#173f32]">
                           <ClipboardList className="h-4 w-4" aria-hidden="true" />
-                          Care focus
+                          {copy.careFocus}
                         </div>
                         <p className="mt-3 max-w-3xl text-base leading-8 text-slate-700">
                           {guide.lead}
@@ -505,7 +616,7 @@ export default function ServicesPage() {
                             href="/booking"
                             className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-[3px] bg-[#173f32] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#225c49]"
                           >
-                            Book this service
+                            {copy.bookService}
                             <ArrowRight className="h-4 w-4" aria-hidden="true" />
                           </Link>
                         </div>

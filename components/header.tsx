@@ -32,8 +32,8 @@ export default function Header({
     const isActive = pathname === href;
 
     return isActive
-      ? "rounded-[3px] bg-green-100 px-3.5 py-2 font-medium text-green-900"
-      : "rounded-[3px] px-3.5 py-2 text-slate-700 transition hover:bg-green-50 hover:text-green-700";
+      ? "rounded-[3px] bg-green-100 px-2 py-2 text-xs font-medium text-green-900 sm:px-3.5 sm:text-base"
+      : "rounded-[3px] px-2 py-2 text-xs text-slate-700 transition hover:bg-green-50 hover:text-green-700 sm:px-3.5 sm:text-base";
   };
 
   return (
@@ -46,18 +46,18 @@ export default function Header({
       />
 
       <header className="sticky top-0 z-30 border-b border-green-100 bg-white/95 backdrop-blur">
-        <div className="flex w-full items-center justify-between gap-5 px-5 py-3 sm:px-8 xl:px-10">
-          <Link href="/" className="flex min-w-0 shrink-0 items-center gap-3">
+        <div className="flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-2 sm:flex-nowrap sm:px-8 sm:py-3 xl:px-10">
+          <Link href="/" className="flex min-w-0 basis-full items-center gap-2.5 sm:basis-auto sm:flex-1 sm:gap-3">
             <Image
               src="/Langham-Health-Logo.png"
               alt={`${clinicName} logo`}
               width={96}
               height={96}
-              className="h-16 w-16 shrink-0 object-contain sm:h-20 sm:w-20"
+              className="h-12 w-12 shrink-0 object-contain sm:h-16 sm:w-16 xl:h-20 xl:w-20"
               priority
             />
             <span
-              className="max-w-[15rem] truncate text-2xl font-semibold tracking-tight text-slate-900 sm:max-w-[24rem] sm:text-3xl xl:text-2xl 2xl:text-3xl"
+              className="max-w-[15rem] truncate text-xl font-semibold tracking-tight text-slate-900 sm:max-w-[24rem] sm:text-2xl xl:text-2xl 2xl:text-3xl"
               style={{ fontFamily: "var(--font-source-serif)" }}
             >
               {clinicName}
@@ -72,10 +72,10 @@ export default function Header({
             ))}
           </nav>
 
-          <div className="flex shrink-0 items-center gap-3">
+          <div className="flex w-full shrink-0 items-center justify-start gap-2 sm:ml-auto sm:w-auto sm:gap-3">
             <Link
               href="/booking"
-              className="rounded-[3px] border border-green-200 bg-green-100 px-5 py-2.5 text-sm font-medium text-green-900 transition hover:bg-green-200 sm:px-6 sm:text-base"
+              className="rounded-[3px] border border-green-200 bg-green-100 px-3.5 py-2 text-sm font-medium text-green-900 transition hover:bg-green-200 sm:px-6 sm:py-2.5 sm:text-base"
             >
               {t(language, "navBooking")}
             </Link>
@@ -84,8 +84,8 @@ export default function Header({
           </div>
         </div>
 
-        <div className="border-t border-green-100 px-8 py-3 xl:hidden xl:px-14">
-          <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 text-base">
+        <div className="border-t border-green-100 px-3 py-2 sm:px-8 sm:py-3 xl:hidden xl:px-14">
+          <nav className="mx-auto grid w-full max-w-[22rem] grid-cols-2 items-center gap-1.5 text-center min-[430px]:max-w-none min-[430px]:grid-cols-4 sm:flex sm:flex-wrap sm:justify-center sm:gap-x-4 sm:gap-y-3">
             {navItems.map((item) => (
               <Link key={item.href} href={item.href} className={getNavClass(item.href)}>
                 {item.label}
