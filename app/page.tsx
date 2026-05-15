@@ -60,22 +60,33 @@ function StaffPhoto({
   label: string;
 }) {
   const [isReady, setIsReady] = useState(false);
-  const src = `/staff/staff-${slot}.png`;
+  const src = `/staff/staff-${slot}.png?v=staff-refresh-20260515`;
 
   useEffect(() => {
+    let isMounted = true;
     const image = new window.Image();
-    image.onload = () => setIsReady(true);
-    image.onerror = () => setIsReady(false);
+    image.onload = () => {
+      if (isMounted) setIsReady(true);
+    };
+    image.onerror = () => {
+      if (isMounted) setIsReady(false);
+    };
     image.src = src;
+
+    return () => {
+      isMounted = false;
+    };
   }, [src]);
 
   return (
     <div className="relative flex h-[260px] items-center justify-center overflow-hidden bg-[#dfeee4] text-center text-sm font-semibold uppercase tracking-[0.14em] text-green-800 sm:h-[300px]">
       {isReady ? (
         <Image
+          key={src}
           src={src}
           alt={`${name} photo`}
           fill
+          unoptimized
           sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"
           className="object-cover"
         />
