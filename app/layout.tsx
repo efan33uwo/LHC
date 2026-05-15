@@ -17,7 +17,7 @@ const sourceSans = Source_Sans_3({
 export const metadata: Metadata = {
   title: "Langham Health Centre",
   description:
-    "Family medicine and primary care in Markham. Appointment requests, services, and clinic contact information.",
+    "Family medicine and primary care in Markham,Ontario. Appointment requests, services, and clinic contact information.",
 };
 
 export const viewport: Viewport = {
